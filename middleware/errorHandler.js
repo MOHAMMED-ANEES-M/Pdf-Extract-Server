@@ -21,7 +21,7 @@ const errorHandler = (err,req,res,next) => {
         case UNAUTHORIZED:
             res.status(UNAUTHORIZED).json({ title: "Unauthorized", message: err.message, stackTrace: err.stack });
         default:
-            console.log('No error');
+            console.log(err);
             break;
     }
 }
