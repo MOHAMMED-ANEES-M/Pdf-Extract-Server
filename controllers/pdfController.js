@@ -23,8 +23,10 @@ const uploadPdf = asyncHandler(async (req,res) => {
 })
 
 const fetchPdf = asyncHandler(async (req,res) => {
-    const fetchedPdf = await Pdf.find()
+    const userId = req.user.id
+    const fetchedPdf = await Pdf.findOne({ userId }).sort({ createdAt: -1 });
     if (fetchedPdf) {
+        console.log(fetchedPdf,'fetched pdf');
         res.status(201).json({success: true, fetchedPdf})
     } else {
         res.status(400);
