@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const verifyToken = require('../middleware/verifyTokenHandler');
-const { uploadPdf, fetchPdf } = require('../controllers/pdfController');
+const { uploadPdf, fetchPdf, extractPdf } = require('../controllers/pdfController');
 const upload = require('../middleware/multer');
 
 
 
 router.post("/upload", verifyToken, upload.single('file'), uploadPdf);
+router.post("/extract", verifyToken, extractPdf);
 router.get("/", verifyToken, fetchPdf);
 
 
