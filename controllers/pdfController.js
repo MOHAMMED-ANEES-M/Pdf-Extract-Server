@@ -1,12 +1,15 @@
 const asyncHandler = require('express-async-handler');
 const Pdf = require('../models/pdfModel');
-const pdfLib = require('pdf-lib');
-// const fs = require('fs').promises;
+// const pdfLib = require('pdf-lib');
+// // const fs = require('fs').promises;
 const fs = require('fs');
-const { PdfDocument } = require("@ironsoftware/ironpdf");
-const PDFDocument = require('pdf-lib').PDFDocument;
+// // const { PdfDocument } = require("@ironsoftware/ironpdf");
+// const { PDFDocument } = require('pdf-lib');
 const path = require('path');
-
+const PDFExtract = require('pdf.js-extract').PDFExtract;
+const pdfExtract = new PDFExtract();
+const pdfServiceInterface = require('../utils/pdfServiceInterface')
+const pdfService = require('../utils/pdfService')
 
 
 
@@ -46,38 +49,49 @@ const fetchPdf = asyncHandler(async (req,res) => {
 
 // POST /api/pdf/extract
 const extractPdf = asyncHandler(async (req,res) => {
-    const { pdfFilePath, pages } = req.body;
-    console.log(req.body);
+   
+    // const { pdfFilePath, pages } = req.body;
+    // console.log(req.body);
 
-     // Construct the full path to the PDF file
-     const filePath = path.join(__dirname, '..', 'uploads', pdfFilePath);
+    
+    // fs.access(filePath, fs.constants.F_OK, (err) => {
+        //     if (err) {
+            //         console.error('Error accessing PDF file:', err);
+            //         return res.status(400).json({ success: false, message: 'PDF file does not exist or is not accessible.' });
+            //     }
+            //      console.log('PDF file exists and is accessible.');
+            //  });
+            
+            
+            const { pdfFilePath, pages } = req.body;
 
-    // Check if the file exists
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-        if (err) {
-            // File does not exist or is not accessible
-            console.error('Error accessing PDF file:', err);
-            return res.status(400).json({ success: false, message: 'PDF file does not exist or is not accessible.' });
+            const extractPages = async (pdfFilePath, pages, pdfServiceInterface) => {
+             const filePath = path.join(__dirname, '..', 'uploads', pdfFilePath);
+
+              if (fs.existsSync(filePath)) {
+            const pdfBytes = fs.readFileSync(filePath);
+            let extractedPdf;
+            if (Array.isArray(pages)) {
+                if (pages.length === 0) {
+                    return res.status(400).json({ success: false, message: 'At least select a page to extract new pdf' });
+                }
+                extractedPdf = await pdfServiceInterface.extractRandomPages(pdfBytes, pages);
+            } 
+            const tempFilePath = path.join(__dirname, '..', 'temp', pdfFilePath);
+            fs.writeFileSync(tempFilePath, extractedPdf);
+
+            const fileStream = fs.createReadStream(tempFilePath);
+            fs.unlinkSync(filePath);
+            return fileStream;
         }
-        
-         // File exists and is accessible
-         console.log('PDF file exists and is accessible.');
-         // Proceed with your logic here
-     });
+    }
 
-     const pdfBytes = await fs.promises.readFile(filePath);
-     const pdfDoc = await PDFDocument.load(pdfBytes);
-
-     // Remove the specified page
-     pdfDoc.removePage(1); // Adjust page index
-     
-     const modifiedPdfBytes = await pdfDoc.save();
-     res.setHeader('Content-Type', 'application/pdf');
-     res.setHeader('Content-Disposition', 'attachment; filename="modified-pdf.pdf"');
-     res.send(modifiedPdfBytes);
-        // res.status(201).json({ success: true, outputPath });
-    // res.send(newPdfBytes);
-
+        const fileStream = await extractPages(pdfFilePath, pages, pdfServiceInterface(pdfService));
+        res.setHeader('Content-Type', 'application/pdf');
+        res.status(200);
+        fileStream.pipe(res);
+   
+    
 })
 
 

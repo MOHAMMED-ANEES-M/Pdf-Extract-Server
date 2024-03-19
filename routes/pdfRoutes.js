@@ -7,7 +7,7 @@ const upload = require('../middleware/multer');
 
 
 router.post("/upload", verifyToken, upload.single('file'), uploadPdf);
-router.post("/extract", verifyToken, extractPdf);
+router.post("/extract", verifyToken, upload.single('file'), extractPdf);
 router.get("/", verifyToken, fetchPdf);
 
 
