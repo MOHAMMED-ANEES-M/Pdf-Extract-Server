@@ -49,19 +49,6 @@ const fetchPdf = asyncHandler(async (req,res) => {
 
 // POST /api/pdf/extract
 const extractPdf = asyncHandler(async (req,res) => {
-   
-    // const { pdfFilePath, pages } = req.body;
-    // console.log(req.body);
-
-    
-    // fs.access(filePath, fs.constants.F_OK, (err) => {
-        //     if (err) {
-            //         console.error('Error accessing PDF file:', err);
-            //         return res.status(400).json({ success: false, message: 'PDF file does not exist or is not accessible.' });
-            //     }
-            //      console.log('PDF file exists and is accessible.');
-            //  });
-            
             
             const { pdfFilePath, pages } = req.body;
 
