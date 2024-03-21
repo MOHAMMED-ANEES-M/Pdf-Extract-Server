@@ -1,17 +1,16 @@
 const asyncHandler = require('express-async-handler');
 var jwt = require('jsonwebtoken');
 
+
 const verifyToken = asyncHandler(async (req,res,next) => {
     let token;
     authHeader = req.headers.Authorization || req.headers.authorization 
-    // console.log(authHeader);
     if(!authHeader){
         res.status(404)
         throw new Error("Token is not provided")
     }
     if (authHeader && authHeader.startsWith('Bearer')) {
         token = authHeader.split(' ')[1];
-        // console.log(token,'token');
         jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
             if(err){
                 console.log('token err');
@@ -22,8 +21,8 @@ const verifyToken = asyncHandler(async (req,res,next) => {
             next();
         });
         
-    };
-    
+    }; 
 });
+
 
 module.exports = verifyToken;

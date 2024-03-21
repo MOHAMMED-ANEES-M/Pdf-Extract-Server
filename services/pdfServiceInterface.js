@@ -1,5 +1,6 @@
 const pdfService = require('./pdfService');
 
+
 const pdfServiceInterface = () => {
     const service = pdfService();
 
@@ -16,5 +17,6 @@ const pdfServiceInterface = () => {
         extractRandomPages
     };
 };
+
 
 module.exports = pdfServiceInterface;

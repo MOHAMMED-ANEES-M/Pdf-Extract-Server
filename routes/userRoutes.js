@@ -5,9 +5,7 @@ const verifyToken = require('../middleware/verifyTokenHandler');
 
 
 router.post("/register", registerUser);
-
 router.post("/login", loginUser)
-
 router.get("/current", verifyToken, currentUser)
 
 

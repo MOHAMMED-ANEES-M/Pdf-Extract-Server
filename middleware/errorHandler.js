@@ -1,5 +1,6 @@
 const { VALIDATION_ERROR, UNAUTHORIZED, NOT_FOUND, FORBIDDEN, SERVER_ERROR } = require('../constants').constants;
 
+
 const errorHandler = (err,req,res,next) => {
     const statusCode = res.statusCode ? res.statusCode : 500;
     switch (statusCode) {
@@ -25,5 +26,6 @@ const errorHandler = (err,req,res,next) => {
             break;
     }
 }
+
 
 module.exports = errorHandler

@@ -9,7 +9,6 @@ const pdfRoutes = require('./routes/pdfRoutes')
 
 connectDB()
 const app=express()
-
 const port = process.env.PORT || 5001
 
 app.use(express.json())
@@ -20,6 +19,7 @@ app.use("/api/users", userRoutes)
 app.use("/api/pdf", pdfRoutes)
 
 app.use(errorHandler)
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

@@ -5,6 +5,7 @@ const saltRounds = 10;
 var jwt = require('jsonwebtoken');
 
 
+
 // POST /api/users/register
 const registerUser = asyncHandler(async (req,res) => {
     console.log(req.body,'register body');
@@ -23,16 +24,15 @@ const registerUser = asyncHandler(async (req,res) => {
         throw new Error('User already registered')
     }
     const hashedPassword = await bcrypt.hash( password, saltRounds )
-    console.log('Hashed Password:',hashedPassword);
     const user = await User.create({ username, fname, lname, password: hashedPassword })
     if (user) {   
-        console.log('User created',user);
         res.status(201).json({success: true, user})
     } else {
         res.status(400);
         throw new Error('User data is invalid')
     }
 })
+
 
 // POST /api/users/login
 const loginUser = asyncHandler(async (req,res) => {
@@ -54,11 +54,12 @@ const loginUser = asyncHandler(async (req,res) => {
     }
 })
 
+
 // GET /api/users/current
 const currentUser = asyncHandler(async (req,res) => {
     res.json(req.user)
-    console.log('Current user:',req.user);
 })
+
 
 
 module.exports = { registerUser, loginUser, currentUser }
