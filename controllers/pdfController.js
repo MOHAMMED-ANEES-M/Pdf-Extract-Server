@@ -8,8 +8,8 @@ const fs = require('fs');
 const path = require('path');
 const PDFExtract = require('pdf.js-extract').PDFExtract;
 const pdfExtract = new PDFExtract();
-const pdfServiceInterface = require('../utils/pdfServiceInterface')
-const pdfService = require('../utils/pdfService')
+const pdfServiceInterface = require('../services/pdfServiceInterface')
+const pdfService = require('../services/pdfService')
 
 
 
