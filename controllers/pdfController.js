@@ -71,13 +71,21 @@ const extractPdf = asyncHandler(async (req,res) => {
               if (fs.existsSync(filePath)) {
             const pdfBytes = fs.readFileSync(filePath);
             let extractedPdf;
-            if (Array.isArray(pages)) {
+            
+        if (Array.isArray(pages)) {
                 if (pages.length === 0) {
                     return res.status(400).json({ success: false, message: 'At least select a page to extract new pdf' });
                 }
                 extractedPdf = await pdfServiceInterface.extractRandomPages(pdfBytes, pages);
             } 
-            const tempFilePath = path.join(__dirname, '..', 'temp', pdfFilePath);
+
+            const tempDir = path.join(__dirname, '..', 'temp');
+
+            if (!fs.existsSync(tempDir)) {
+                fs.mkdirSync(tempDir);
+            }
+
+            const tempFilePath = path.join(tempDir, pdfFilePath);
             fs.writeFileSync(tempFilePath, extractedPdf);
 
             const fileStream = fs.createReadStream(tempFilePath);
