@@ -16,9 +16,11 @@ const uploadPdf = asyncHandler(async (req,res) => {
         throw new Error('All fields are mandatory')
     }
     const pdfUpload = await Pdf.create({ pdf: file, userId: userId })
-    if (pdfUpload) {   
+    if (pdfUpload) {  
+        console.log('Pdf successfully uploaded'); 
         res.status(201).json({success: true, pdfUpload})
     } else {
+        console.log('Error uploading pdf');
         res.status(400);
         throw new Error('Error uploading pdf')
     }
@@ -32,6 +34,7 @@ const fetchPdf = asyncHandler(async (req,res) => {
     if (fetchedPdf) {
         res.status(201).json({success: true, fetchedPdf})
     } else {
+        console.log('Error fetching pdf');
         res.status(400);
         throw new Error('Error fetching pdf')
     }

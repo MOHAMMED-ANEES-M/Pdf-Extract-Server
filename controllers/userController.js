@@ -26,8 +26,10 @@ const registerUser = asyncHandler(async (req,res) => {
     const hashedPassword = await bcrypt.hash( password, saltRounds )
     const user = await User.create({ username, fname, lname, password: hashedPassword })
     if (user) {   
+        console.log('User registration success');
         res.status(201).json({success: true, user})
     } else {
+        console.log('User data is invalid');
         res.status(400);
         throw new Error('User data is invalid')
     }
@@ -47,8 +49,10 @@ const loginUser = asyncHandler(async (req,res) => {
              { user: { username: user.username, id: user.id }},
              process.env.ACCESS_TOKEN_SECRET,
              {expiresIn: '48h'})
+        console.log('User login success');
         res.status(200).json({ token: accessToken, success: true, user })
     } else {
+        console.log("Username or Password is not valid");
         res.status(404);
         throw new Error("Username or Password is not valid")
     }
